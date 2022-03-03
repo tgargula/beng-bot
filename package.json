@@ -2,9 +2,9 @@
   "name": "tombeng",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,11 @@
   },
   "homepage": "https://github.com/tgargula/tombeng#readme",
   "dependencies": {
-    "express": "^4.17.3"
+    "@notionhq/client": "^1.0.1",
+    "axios": "^0.26.0",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.4",
+    "node-cron": "^3.0.0"
   }
 }
