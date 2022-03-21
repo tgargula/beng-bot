@@ -41,6 +41,10 @@ class Notion {
             return applyMarkdown(objectType, text);
           });
           const body = texts.join("\n");
+          const status = properties.Status?.select?.name;
+          const categories = properties.Category?.multi_select?.map(
+            ({ name }) => name
+          ) || [];
 
           return {
             createdAt: new Date(created_time),
@@ -48,6 +52,8 @@ class Notion {
             notionId: id,
             title,
             body,
+            categories,
+            status,
           };
         }
       )
