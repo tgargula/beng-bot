@@ -1,3 +1,4 @@
+const { logger } = require("@tgargula/logger");
 const express = require("express");
 
 const port = process.env.PORT || 8080;
@@ -8,16 +9,15 @@ const createServer = () => {
   app.use(express.json());
 
   app.post("/api/pr", (req, res) => {
-    console.log(req.body);
-    res.send("Hello World!");
+    res.status(501).send('Not implemented');
   });
 
-  app.use((req, res, next) => {
+  app.use('*', (req, res, next) => {
     res.status(404).json({ error: "Path not found" });
   });
 
   app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+    logger.info(`App listening on port ${port}`);
   });
 
   return app;
