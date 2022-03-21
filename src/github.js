@@ -1,3 +1,4 @@
+const { logger } = require("@tgargula/logger");
 const { default: axios } = require("axios");
 
 const repoOwner = process.env.GITHUB_OWNER;
@@ -24,8 +25,7 @@ class Github {
   };
 
   updateIssue = async ({ issueNo, title, body }) => {
-    console.log('Updating issue ' + issueNo);
-    console.table({ issueNo, title, body })
+    logger.info('Updating issue ' + issueNo);
     await axios.patch(
       `${apiUrl}/issues/${issueNo}`,
       { title, body },

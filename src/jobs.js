@@ -39,7 +39,7 @@ const notionListenerJob = async () => {
       await database.update({ notionId, updatedAt });
     });
   } catch (err) {
-    console.error(err);
+    logger.error(err);
   }
 };
 
