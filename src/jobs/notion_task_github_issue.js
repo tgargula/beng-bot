@@ -1,5 +1,5 @@
 const { logger } = require("@tgargula/logger");
-const database = require("../database");
+const db = require("../database");
 const github = require("../github");
 const notion = require("../notion");
 
@@ -13,6 +13,7 @@ const GITHUB_CATEGORIES = ["FE", "BE", "BL", "E2E", "DO", "MB"];
  */
 const notionTaskGithubIssueJob = async () => {
   try {
+    const database = db.database;
     const notionTasks = await notion.todo.fetchAndTransform(PERIOD);
     const { newTasks, updatedTasks } = await database.task.detect(notionTasks);
 
