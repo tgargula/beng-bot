@@ -1,3 +1,5 @@
+const { NOTION_OWNER } = process.env;
+
 const prefix = {
   paragraph: "\n",
   heading_1: "# ",
@@ -22,7 +24,7 @@ const suffix = {
   code: "\n```",
 };
 
-const supportedBlocks = [...Object.keys(prefix), 'to_do'];
+const supportedBlocks = [...Object.keys(prefix), "to_do"];
 
 const applyMarkdown = (type, text) => {
   return `${prefix[type]}${text}${suffix[type]}`;
@@ -38,8 +40,18 @@ const getObjectType = (obj, type) => {
   return type;
 };
 
+const mergeRichText = (richText) => {
+  return richText.reduce((prev, { plain_text }) => `${prev}${plain_text}`, "");
+};
+
+const buildNotionDatabasePage = (databaseId) => {
+  return `https://notion.so/${NOTION_OWNER}/${databaseId.replaceAll("-", "")}`;
+};
+
 module.exports = {
   applyMarkdown,
   getObjectType,
+  mergeRichText,
+  buildNotionDatabasePage,
   supportedBlocks,
 };
