@@ -1,25 +1,10 @@
-const mongoose = require("mongoose");
+class NotionTaskGithubIssueDatabase {
+  constructor(collection) {
+    this.collection = collection;
+  }
 
-const db = process.env.DATABASE_URI;
-
-let collection;
-const createCollection = async (db) => {
-  collection = db?.model(
-    "Task",
-    new db.Schema({
-      issueNo: Number,
-      notionId: String,
-      createdAt: Date,
-      updatedAt: Date,
-    })
-  );
-};
-
-mongoose.connect(db).then(createCollection);
-
-class Mongo {
   create = async ({ issueNo, notionId, createdAt, updatedAt }) => {
-    collection?.({
+    this.collection({
       issueNo,
       notionId,
       createdAt,
@@ -34,7 +19,7 @@ class Mongo {
 
     const notionIds = notionTasks.map(({ notionId }) => notionId);
     const oldTasks =
-      (await collection?.find({ notionId: { $in: notionIds } })) || [];
+      (await this.collection.find({ notionId: { $in: notionIds } })) || [];
 
     const dbNotionIds = oldTasks.map(({ notionId }) => notionId);
     const newTasks = notionTasks.filter(
@@ -45,19 +30,21 @@ class Mongo {
       const oldTask = oldTasks.find(
         ({ notionId: oldNotionId }) => notionId === oldNotionId
       );
-      return oldTask && oldTask.updatedAt.toISOString() !== updatedAt.toISOString();
+      return (
+        oldTask && oldTask.updatedAt.toISOString() !== updatedAt.toISOString()
+      );
     });
     return { newTasks, updatedTasks };
   };
 
   getIssue = async (notionId) => {
-    const result = await collection?.findOne({ notionId }).exec();
+    const result = await this.collection.findOne({ notionId }).exec();
     return result?.issueNo;
   };
 
   update = async ({ notionId, updatedAt }) => {
-    await collection?.findOneAndUpdate({ notionId }, { updatedAt });
+    await this.collection.findOneAndUpdate({ notionId }, { updatedAt });
   };
 }
 
-module.exports = new Mongo();
+module.exports = NotionTaskGithubIssueDatabase;

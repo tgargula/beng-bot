@@ -25,7 +25,7 @@ class Github {
   };
 
   updateIssue = async ({ issueNo, title, body }) => {
-    logger.info('Updating issue ' + issueNo);
+    logger.info('Updating issue #' + issueNo);
     await axios.patch(
       `${apiUrl}/issues/${issueNo}`,
       { title, body },

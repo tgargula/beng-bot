@@ -1,12 +1,18 @@
 require("dotenv").config();
 const cron = require("node-cron");
-const notionListenerJob = require("./jobs");
+const { connectDatabase } = require("./database");
+const {
+  notionUserStoryTaskNotionTaskJob,
+  notionTaskGithubIssueJob,
+} = require("./jobs");
 const createServer = require("./server");
 
 const main = async () => {
+  await connectDatabase();
   createServer();
 
-  cron.schedule("* * * * *", notionListenerJob);
+  cron.schedule("* * * * *", notionTaskGithubIssueJob);
+  cron.schedule("* * * * *", notionUserStoryTaskNotionTaskJob);
 };
 
 main();
