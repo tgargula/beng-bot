@@ -68,7 +68,7 @@ class NotionTodo {
   };
 
   fetchAndTransform = async (period) => {
-    const results = await fetch(period);
+    const results = await this.fetch(period);
 
     return Promise.all(
       results.map(
