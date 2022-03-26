@@ -14,7 +14,7 @@ const main = async () => {
 
   cron.schedule("* * * * *", notionTaskGithubIssueJob);
   cron.schedule("* * * * *", notionUserStoryTaskNotionTaskJob);
-  cron.schedule("0 * * * *", healthcheckJob);
+  cron.schedule("*/10 * * * *", healthcheckJob);
 };
 
 main();
