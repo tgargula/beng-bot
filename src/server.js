@@ -9,6 +9,7 @@ const createServer = () => {
   app.use(express.json());
 
   app.get("/api/healthcheck", (req, res) => {
+    logger.info("Healthcheck completed");
     res.status(200).send("OK");
   });
 
