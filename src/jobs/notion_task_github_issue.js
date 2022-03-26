@@ -14,7 +14,7 @@ const GITHUB_CATEGORIES = ["FE", "BE", "BL", "E2E", "DO", "MB"];
 const notionTaskGithubIssueJob = async () => {
   try {
     const notionTasks = await notion.todo.fetchAndTransform(PERIOD);
-    const { newTasks, updatedTasks } = await database.detect(notionTasks);
+    const { newTasks, updatedTasks } = await database.task.detect(notionTasks);
 
     newTasks.map(
       async ({
