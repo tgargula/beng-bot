@@ -4,6 +4,7 @@ const { connectDatabase } = require("./database");
 const {
   notionUserStoryTaskNotionTaskJob,
   notionTaskGithubIssueJob,
+  healthcheckJob,
 } = require("./jobs");
 const createServer = require("./server");
 
@@ -13,6 +14,7 @@ const main = async () => {
 
   cron.schedule("* * * * *", notionTaskGithubIssueJob);
   cron.schedule("* * * * *", notionUserStoryTaskNotionTaskJob);
+  cron.schedule("0 * * * *", healthcheckJob);
 };
 
 main();
