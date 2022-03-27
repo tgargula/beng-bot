@@ -2,7 +2,7 @@ const notion = require("../notion");
 const db = require("../database");
 const { logger } = require("@tgargula/logger");
 
-const PERIOD = 1000 * 60 * 30; // 30 minutes
+const PERIOD = 1000 * 60 * 60 * 2; // 2 hours
 
 const notionUserStoryTaskNotionTaskJob = async () => {
   try {
@@ -23,7 +23,7 @@ const notionUserStoryTaskNotionTaskJob = async () => {
 
       const { last_edited_time: updatedAt } = await notion.userStories.update(
         task.id,
-        {},
+        { properties: {} },
         todoTaskId
       );
 

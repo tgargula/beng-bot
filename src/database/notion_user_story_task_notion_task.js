@@ -11,14 +11,6 @@ class NotionUserStoryTaskNotionTaskDatabase {
     todoTaskCreatedAt,
     todoTaskUpdatedAt,
   }) => {
-    console.log({
-      userStoryTaskId,
-      todoTaskId,
-      userStoryTaskCreatedAt,
-      userStoryTaskUpdatedAt,
-      todoTaskCreatedAt,
-      todoTaskUpdatedAt,
-    });
     this.collection({
       userStoryTaskId,
       todoTaskId,
