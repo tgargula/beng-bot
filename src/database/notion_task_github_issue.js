@@ -42,6 +42,11 @@ class NotionTaskGithubIssueDatabase {
     return result?.issueNo;
   };
 
+  getNotionId = async (issueNo) => {
+    const result = await this.collection.findOne({ issueNo }).exec();
+    return result?.notionId;
+  }
+
   update = async ({ notionId, updatedAt }) => {
     await this.collection.findOneAndUpdate({ notionId }, { updatedAt });
   };

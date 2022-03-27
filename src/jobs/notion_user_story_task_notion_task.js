@@ -8,7 +8,7 @@ const notionUserStoryTaskNotionTaskJob = async () => {
   try {
     const database = db.database;
     const [userStoryTasks, todoTasks] = await Promise.all([
-      notion.userStories.fetch(),
+      notion.userStories.fetch(PERIOD),
       notion.todo.fetch(PERIOD),
     ]);
     const { newTasks, updatedUserStoryTasks, updatedTodoTasks } =
