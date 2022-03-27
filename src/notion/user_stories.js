@@ -1,3 +1,5 @@
+const { buildNotionDatabasePage } = require("../utils");
+
 const databaseId = process.env.NOTION_USER_STORIES_DATABASE_ID;
 
 class NotionUserStories {
@@ -6,35 +8,35 @@ class NotionUserStories {
   }
 
   #transformProperties = ({ Status, Assign, Cost, Name, Priority, Tags }) => ({
-    Status: {
+    Status: Status && {
       type: "select",
       select: Status.select
         ? { name: Status.select.name, color: Status.select.color }
         : { name: "Backlog", color: "brown" },
     },
-    Assign: {
+    Assign: Assign && {
       type: "people",
       people: Assign.people,
     },
-    Cost: {
+    Cost: Cost && {
       type: "select",
       select: Cost.select && {
         name: Cost.select.name,
         color: Cost.select.color,
       },
     },
-    Name: {
+    Name: Name && {
       type: "title",
       title: Name.title,
     },
-    Priority: {
+    Priority: Priority && {
       type: "select",
       select: Priority.select && {
         name: Priority.select.name,
         color: Priority.select.color,
       },
     },
-    Tags: {
+    Tags: Tags && {
       type: "multi_select",
       multi_select: Tags.multi_select?.map(({ name, color }) => ({
         name,
@@ -44,17 +46,16 @@ class NotionUserStories {
   });
 
   fetch = async (period) => {
+    const { results } = await this.notion.databases.query({
+      database_id: databaseId,
+    });
+
     const after = period && new Date(new Date() - period);
 
     const filter = after && {
       last_edited_time: { after: after.toISOString() },
       property: "Updated at",
     };
-
-    const { results } = await this.notion.databases.query({
-      database_id: databaseId,
-      filter,
-    });
 
     const tasks = await Promise.all(
       results.map(async ({ id }) => {
@@ -95,12 +96,25 @@ class NotionUserStories {
     return tasks.flat();
   };
 
-  update = async (userStoryTaskId, {properties}) => {
+  update = async (userStoryTaskId, { properties }, todoTaskId) => {
+    const url = todoTaskId && buildNotionDatabasePage(todoTaskId);
+    const todoTask = url && {
+      rich_text: [
+        {
+          type: "text",
+          text: {
+            content: url,
+            link: { url },
+          },
+        },
+      ],
+    };
+
     return this.notion.pages.update({
       page_id: userStoryTaskId,
-      properties: this.#transformProperties(properties),
+      properties: { ...this.#transformProperties(properties), Task: todoTask },
     });
-  }
+  };
 }
 
 module.exports = NotionUserStories;

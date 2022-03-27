@@ -1,5 +1,6 @@
 const { logger } = require("@tgargula/logger");
 const express = require("express");
+const closeTask = require("./actions/close_task");
 
 const port = process.env.PORT || 8080;
 
@@ -13,12 +14,27 @@ const createServer = () => {
     res.status(200).send("OK");
   });
 
-  app.post("/api/pr", (req, res) => {
-    res.status(501).send("Not implemented");
+  app.post("/api/issue", async (req, res, next) => {
+    try {
+      const payload = req.body;
+      if (payload.action !== "closed") {
+        res.status(202).send("Issue is not closed. Skipping");
+        return;
+      }
+
+      await closeTask(payload);
+      res.status(200).send("OK");
+    } catch (err) {
+      next(err);
+    }
   });
 
   app.use("*", (req, res, next) => {
     res.status(404).json({ error: "Path not found" });
+  });
+
+  app.use((err, req, res, next) => {
+    res.status(500).send(err);
   });
 
   app.listen(port, () => {
