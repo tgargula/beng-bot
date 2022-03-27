@@ -22,7 +22,7 @@ const notionUserStoryTaskNotionTaskJob = async () => {
       } = await notion.todo.create(task);
 
       const { last_edited_time: updatedAt } = await notion.userStories.update(
-        task.id,
+        task.userStoryTaskId,
         { properties: {} },
         todoTaskId
       );
