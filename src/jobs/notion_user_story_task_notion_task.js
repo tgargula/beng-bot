@@ -21,10 +21,16 @@ const notionUserStoryTaskNotionTaskJob = async () => {
         last_edited_time: todoTaskUpdatedAt,
       } = await notion.todo.create(task);
 
+      const { last_edited_time: updatedAt } = await notion.userStories.update(
+        task.id,
+        {},
+        todoTaskId
+      );
+
       await database.userStoryTask.create({
         userStoryTaskId: task.userStoryTaskId,
         userStoryTaskCreatedAt: task.createdAt,
-        userStoryTaskUpdatedAt: task.updatedAt,
+        userStoryTaskUpdatedAt: new Date(updatedAt),
         todoTaskCreatedAt: new Date(todoTaskCreatedAt),
         todoTaskUpdatedAt: new Date(todoTaskUpdatedAt),
         todoTaskId,
@@ -56,7 +62,7 @@ const notionUserStoryTaskNotionTaskJob = async () => {
       );
       if (!userStoryTaskId) return;
       const { last_edited_time: userStoryTaskUpdatedAt } =
-        await notion.userStories.update(userStoryTaskId, task);
+        await notion.userStories.update(userStoryTaskId, task, task.id);
 
       await database.userStoryTask.update(userStoryTaskId, {
         todoTaskUpdatedAt: new Date(task.last_edited_time),

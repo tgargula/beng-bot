@@ -14,35 +14,35 @@ class NotionTodo {
   }
 
   #transformProperties = ({ Status, Assign, Cost, Name, Priority, Tags }) => ({
-    Status: {
+    Status: Status && {
       type: "select",
       select: Status.select
         ? { name: Status.select.name, color: Status.select.color }
         : { name: "Backlog", color: "brown" },
     },
-    Assign: {
+    Assign: Assign && {
       type: "people",
       people: Assign.people,
     },
-    Cost: {
+    Cost: Cost && {
       type: "select",
       select: Cost.select && {
         name: Cost.select.name,
         color: Cost.select.color,
       },
     },
-    Name: {
+    Name: Name && {
       type: "title",
       title: Name.title,
     },
-    Priority: {
+    Priority: Priority && {
       type: "select",
       select: Priority.select && {
         name: Priority.select.name,
         color: Priority.select.color,
       },
     },
-    Tags: {
+    Tags: Tags && {
       type: "multi_select",
       multi_select: Tags.multi_select?.map(({ name, color }) => ({
         name,

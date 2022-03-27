@@ -1,3 +1,5 @@
+const { buildNotionDatabasePage } = require("../utils");
+
 const databaseId = process.env.NOTION_USER_STORIES_DATABASE_ID;
 
 class NotionUserStories {
@@ -95,12 +97,25 @@ class NotionUserStories {
     return tasks.flat();
   };
 
-  update = async (userStoryTaskId, {properties}) => {
+  update = async (userStoryTaskId, { properties }, todoTaskId) => {
+    const url = todoTaskId && buildNotionDatabasePage(todoTaskId);
+    const todoTask = url && {
+      rich_text: [
+        {
+          type: "text",
+          text: {
+            content: url,
+            link: { url },
+          },
+        },
+      ],
+    };
+
     return this.notion.pages.update({
       page_id: userStoryTaskId,
-      properties: this.#transformProperties(properties),
+      properties: { ...this.#transformProperties(properties), Task: todoTask },
     });
-  }
+  };
 }
 
 module.exports = NotionUserStories;
