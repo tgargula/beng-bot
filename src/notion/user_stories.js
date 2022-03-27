@@ -54,7 +54,7 @@ class NotionUserStories {
 
     const filter = after && {
       last_edited_time: { after: after.toISOString() },
-      property: "Updated at",
+      property: "Updated At",
     };
 
     const tasks = await Promise.all(
