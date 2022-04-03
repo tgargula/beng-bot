@@ -10,10 +10,10 @@ const createServer = require("./server");
 
 const main = async () => {
   await connectDatabase();
-  // createServer();
+  createServer();
 
   cron.schedule("* * * * *", notionTaskGithubIssueJob);
-  // cron.schedule("* * * * *", notionUserStoryTaskNotionTaskJob);
+  cron.schedule("* * * * *", notionUserStoryTaskNotionTaskJob);
   cron.schedule("*/10 * * * *", healthcheckJob);
 };
 
