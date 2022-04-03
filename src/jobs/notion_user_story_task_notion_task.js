@@ -69,7 +69,12 @@ const updateUserStoryTasksUsingTodoTasks = (database, updatedTodoTasks) => {
       const userStoryTaskId = await database.userStoryTask.getUserStoryTaskId(
         task.id
       );
-      if (!userStoryTaskId) return;
+      if (!userStoryTaskId) {
+        logger.warning(
+          `User story task id for todo task id: ${task.id} has not been found. Skipping...`
+        );
+        return;
+      }
       const { last_edited_time: userStoryTaskUpdatedAt } =
         await notion.userStories.update(userStoryTaskId, task, task.id);
 
