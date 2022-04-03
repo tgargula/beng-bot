@@ -62,7 +62,7 @@ const notionTaskGithubIssueJob = async () => {
     const { newTasks, updatedTasks } = await database.task.detect(notionTasks);
 
     await Promise.all([
-      // createNewGithubIssues(database, newTasks),
+      createNewGithubIssues(database, newTasks),
       updateGithubIssues(database, updatedTasks),
     ]);
   } catch (err) {
