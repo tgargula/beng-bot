@@ -18,6 +18,7 @@ const createNewGithubIssues = (database, newTasks) => {
         updatedAt,
         categories,
         status,
+        assignees,
       }) => {
         // Skip tasks that don't require a github issue
         if (
@@ -26,7 +27,11 @@ const createNewGithubIssues = (database, newTasks) => {
         )
           return;
 
-        const { issueNo, issueUrl } = await github.createIssue({ title, body });
+        const { issueNo, issueUrl } = await github.createIssue({
+          title,
+          body,
+          assignees,
+        });
         await notion.todo.updateIssueUrl({ pageId: notionId, issueUrl });
         await database.task.create({ issueNo, notionId, createdAt, updatedAt });
       }
@@ -36,11 +41,13 @@ const createNewGithubIssues = (database, newTasks) => {
 
 const updateGithubIssues = (database, updatedTasks) => {
   return Promise.all(
-    updatedTasks.map(async ({ title, body, notionId, updatedAt }) => {
-      const issueNo = await database.task.getIssue(notionId);
-      await github.updateIssue({ issueNo, title, body });
-      await database.task.update({ notionId, updatedAt });
-    })
+    updatedTasks.map(
+      async ({ title, body, notionId, updatedAt, assignees }) => {
+        const issueNo = await database.task.getIssue(notionId);
+        await github.updateIssue({ issueNo, title, body, assignees });
+        await database.task.update({ notionId, updatedAt });
+      }
+    )
   );
 };
 
@@ -55,7 +62,7 @@ const notionTaskGithubIssueJob = async () => {
     const { newTasks, updatedTasks } = await database.task.detect(notionTasks);
 
     await Promise.all([
-      createNewGithubIssues(database, newTasks),
+      // createNewGithubIssues(database, newTasks),
       updateGithubIssues(database, updatedTasks),
     ]);
   } catch (err) {

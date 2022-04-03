@@ -10,10 +10,10 @@ const apiUrl = `https://api.github.com/repos/${repoOwner}/${repo}`;
 const appUrl = `https://github.com/${repoOwner}/${repo}`;
 
 class Github {
-  createIssue = async ({ title, body }) => {
+  createIssue = async ({ title, body, assignees }) => {
     const result = await axios.post(
       `${apiUrl}/issues`,
-      { title, body },
+      { title, body, assignees },
       { headers: { Authorization: `token ${token}` } }
     );
 
@@ -24,11 +24,11 @@ class Github {
     return { issueNo, issueUrl };
   };
 
-  updateIssue = async ({ issueNo, title, body }) => {
+  updateIssue = async ({ issueNo, title, body, assignees }) => {
     logger.info('Updating issue #' + issueNo);
     await axios.patch(
       `${apiUrl}/issues/${issueNo}`,
-      { title, body },
+      { title, body, assignees },
       { headers: { Authorization: `token ${token}` } }
     );
   };

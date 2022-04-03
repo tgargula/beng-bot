@@ -4,6 +4,7 @@ const {
   mergeRichText,
   buildNotionDatabasePage,
   supportedBlocks,
+  parseNotionToGithubAssignees,
 } = require("../utils");
 
 const databaseId = process.env.NOTION_TODO_DATABASE_ID;
@@ -89,6 +90,7 @@ class NotionTodo {
           const categories =
             properties.Tags?.multi_select?.map(({ name }) => name) || [];
 
+          const assignees = parseNotionToGithubAssignees(properties.Assign.people);
           return {
             createdAt: new Date(created_time),
             updatedAt: new Date(last_edited_time),
@@ -97,6 +99,7 @@ class NotionTodo {
             body,
             categories,
             status,
+            assignees,
           };
         }
       )
