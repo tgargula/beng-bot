@@ -35,7 +35,7 @@ const createNewGithubIssues = (database, newTasks) => {
 };
 
 const updateGithubIssues = (database, updatedTasks) => {
-  return new Promise.all(
+  return Promise.all(
     updatedTasks.map(async ({ title, body, notionId, updatedAt }) => {
       const issueNo = await database.task.getIssue(notionId);
       await github.updateIssue({ issueNo, title, body });
