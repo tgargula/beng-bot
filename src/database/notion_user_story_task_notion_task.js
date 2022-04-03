@@ -49,15 +49,21 @@ class NotionUserStoryTaskNotionTaskDatabase {
       }
     );
 
-    const updatedTodoTasks = todoTasks.filter(({ id, last_edited_time: updatedAt }) => {
-      const oldTask = oldTasks.find(
-        ({ todoTaskId }) => id === todoTaskId
-      );
-      return (
-        oldTask &&
-        oldTask.todoTaskUpdatedAt.toISOString() !== updatedAt
-      );
-    });
+    const oldTodoTasks =
+      (await this.collection.find({
+        todoTaskId: { $in: todoTasks.map(({ id }) => id) },
+      })) || [];
+
+    const updatedTodoTasks = todoTasks.filter(
+      ({ id, last_edited_time: updatedAt }) => {
+        const oldTask = oldTodoTasks.find(
+          ({ todoTaskId }) => id === todoTaskId
+        );
+        return (
+          !!oldTask && oldTask.todoTaskUpdatedAt.toISOString() !== updatedAt
+        );
+      }
+    );
 
     return { newTasks, updatedUserStoryTasks, updatedTodoTasks };
   };
