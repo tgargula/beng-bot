@@ -1,5 +1,14 @@
 const { NOTION_OWNER } = process.env;
 
+const notionToGithubUser = {
+  "tgargula@student.agh.edu.pl": "tgargula",
+  "faciszewski@student.agh.edu.pl": "faci2000",
+  "jbugajski@student.agh.edu.pl": "janbugajski",
+  "pstecyk@student.agh.edu.pl": "piotreto",
+  "pierog@student.agh.edu.pl": "Pirgo",
+  "ukowski@student.agh.edu.pl": "t-ukowski",
+};
+
 const prefix = {
   paragraph: "\n",
   heading_1: "# ",
@@ -48,10 +57,19 @@ const buildNotionDatabasePage = (databaseId) => {
   return `https://notion.so/${NOTION_OWNER}/${databaseId.replaceAll("-", "")}`;
 };
 
+const parseNotionToGithubAssignees = (people) => {
+  return people
+    .filter(({ person: { email } }) =>
+      Object.keys(notionToGithubUser).includes(email)
+    )
+    .map(({ person: { email } }) => notionToGithubUser[email]);
+};
+
 module.exports = {
   applyMarkdown,
   getObjectType,
   mergeRichText,
   buildNotionDatabasePage,
+  parseNotionToGithubAssignees,
   supportedBlocks,
 };
